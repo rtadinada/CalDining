@@ -110,7 +110,7 @@
             }
             function login(){
               $.post(
-                "/caleats/login/",
+                "/login/",
                 {
                   //'csrfmiddlewaretoken': $.cookie('csrftoken'),
                   'login_email': $("#login_email").val(),
@@ -122,13 +122,13 @@
                 });
             }
             function logout(){
-              $.post("/caleats/logout/", {}, function(val){
+              $.post("/logout/", {}, function(val){
                 if (val) {alert('Logged out.'); document.location.reload(true);}
               });
             }
             function register(){
               $.post(
-                "/caleats/register/",
+                "/register/",
                 {
                   //'csrfmiddlewaretoken': $.cookie('csrftoken'),
                   'login_email2': $("#login_email2").val(),

@@ -15,7 +15,7 @@
 <script>
     function vote(kind, id) {
         {% if user %}
-        $.getJSON("/caleats/vote/", { pk: id, vote: kind }, function(json){
+        $.getJSON("/vote/", { pk: id, vote: kind }, function(json){
             if (json['success'])
             {
                 var votes = document.getElementById(id+"votes");
@@ -51,7 +51,7 @@
     }
     function favorite(id) {
         {% if user %}
-        $.getJSON("/caleats/favorite/", { pk: id }, function(json){
+        $.getJSON("/favorite/", { pk: id }, function(json){
             var heart = document.getElementById(id+"heart");
             if (json['wasfav'])
             {
