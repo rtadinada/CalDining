@@ -30,11 +30,11 @@
             				<li><a href="{% url 'caleats.views.detail' hall='crossroads' %}">Crossroads</a></li>
             				<li><a href="{% url 'caleats.views.detail' hall='foothill' %}">Foothill</a></li>
 	          			</ul>
-	          			<ul class="navbar-form navbar-right" role="form">
+	          			<!--<ul class="navbar-form navbar-right" role="form">
 	          				<div class="form-group">
 	              				<input type="text" placeholder="Search" class="form-control">
 	            			</div>
-	          			</ul>
+	          			</ul>-->
                   <ul class="nav navbar-nav navbar-right">
                       {% if user.is_authenticated %}
                         <li> <a href= "#" id="logoutLabel" onclick="logout()">Logout </a></li>
