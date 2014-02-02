@@ -1,0 +1,32 @@
+{% extends "caleats/base.html" %}
+{% load staticfiles %}
+
+{% block title %}UC Berkeley Dining{% endblock title %}
+{% block bodyid %}"indexbg"{% endblock bodyid %}
+
+{% block middle %}
+      <div class="container">
+          <div class="row">
+            <div class="col-md-3">
+            <a href="cafe_3" class="thumbnail fade picturetile" style="background: url({% static 'caleats/img/c3.jpg' %})">
+                <div class="name"><strong>CAFÉ 3</strong></div>
+            </a>
+          </div>
+            <div class="col-md-3">
+            <a href="clark_kerr" class="thumbnail fade picturetile" style="background: url({% static 'caleats/img/ckc.jpg' %})">
+              <div class="name"><strong>CLARK KERR</strong></div>
+            </a>
+          </div>
+            <div class="col-md-3">
+            <a href="crossroads" class="thumbnail fade picturetile" style="background: url({% static 'caleats/img/xr.jpg' %})">
+                <div class="name"><strong>CROSSROADS</strong></div>
+            </a>
+          </div>
+            <div class="col-md-3">
+            <a href="foothill" class="thumbnail fade picturetile" style="background: url({% static 'caleats/img/fh.jpg' %})">
+                <div class="name"><strong>FOOTHILL</strong></div>
+            </a>
+          </div>
+          </div>
+        </div>
+{% endblock middle %}

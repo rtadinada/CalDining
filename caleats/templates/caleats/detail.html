@@ -1,0 +1,178 @@
+{% extends "caleats/base.html" %}
+{% load staticfiles %}
+
+{% block title %}{{ hall }}{% endblock title %}
+
+{% block middle %}
+<div class="container">
+  	<div class="jumbotron" id="hallheader">
+        <h1>{{ hall }}</h1>
+        <h2> dinner | 5:00 pm - 10:00 pm</h2>
+    </div>
+</div>
+
+<script type="text/javascript" src="{% static 'caleats/js/jquery.js' %}"></script>
+<script>
+    function vote(kind, id) {
+        {% if user %}
+        $.getJSON("/caleats/vote/", { pk: id, vote: kind }, function(json){
+            if (json['success'])
+            {
+                var votes = document.getElementById(id+"votes");
+                var uvote = document.getElementById(id+"uvote");
+                var dvote = document.getElementById(id+"dvote");
+                if (kind=="up")
+                {
+                    newvotes=parseInt(votes.innerHTML)+1;
+                    if(json['prevvoted'])
+                    {
+                        newvotes+=1
+                    }
+                    votes.innerHTML=newvotes;
+                    uvote.className="glyphicon glyphicon-thumbs-up";
+                    dvote.className="glyphicon glyphicon-thumbs-down";
+                }
+                else
+                {
+                    newvotes=parseInt(votes.innerHTML)-1;
+                    if(json['prevvoted'])
+                    {
+                        newvotes-=1
+                    }
+                    votes.innerHTML=newvotes;
+                    uvote.className="glyphicon glyphicon-thumbs-up";
+                    dvote.className="glyphicon glyphicon-thumbs-down";
+                }
+            }
+        });
+        {% else %}
+        alert("You must be logged in to vote.")
+        {% endif %}
+    }
+    function favorite(id) {
+        {% if user %}
+        $.getJSON("/caleats/favorite/", { pk: id }, function(json){
+            var heart = document.getElementById(id+"heart");
+            if (json['wasfav'])
+            {
+                heart.className="glyphicon glyphicon-heart-empty"
+            }
+            else
+            {
+                heart.className="glyphicon glyphicon-heart"
+            }
+        });
+        {% else %}
+        alert("You must be logged in to favorite.")
+        {% endif %}
+    }
+    function addClickHandlers() {
+        $(".upvote").click( function() { vote("up", $(this).attr("pk")) });
+        $(".downvote").click( function() { vote("down", $(this).attr("pk")) });
+        $(".fav").click( function() { favorite($(this).attr("pk"));
+                                        
+                                      });
+    }
+    $(document).ready(addClickHandlers);
+</script>
+
+<div class="container">
+    <div id="mealdisplay">
+        <ul id="MealChoice" class="nav nav-tabs">
+          <li class="active"><a href="#breakfast" data-toggle="tab">Breakfast</a></li>
+          <li><a href="#lunch" data-toggle="tab">Lunch</a></li>
+          <li><a href="#dinner" data-toggle="tab">Dinner</a></li>
+        </ul>
+        <div id="Menu" class="tab-content">
+          <div class="tab-pane fade in active" id="breakfast">
+            <table class="table table-striped menutable">
+                {% for mu in br_menuitems %}
+                <tr>
+                    <td id="{{ mu.pk }}votes">{{ mu.entree.votes }}</td>
+                    <td>{{ mu.entree.name }}</td>
+                    <td>
+                        <div class="btn-group" data-toggle="buttons">
+                          <label class="upvote btn btn-success{% if mu.entree in upvotes %} active{% endif %}{% if not user %} disabled{% endif%}" pk="{{ mu.pk }}">
+                            <input type="radio" name="options" id="option1"><span id="{{ mu.pk }}uvote"  class="glyphicon glyphicon-thumbs-up"></span>
+                          </label>
+                          <label class="downvote btn btn-danger{% if mu.entree in downvotes %} active{% endif %}{% if not user %} disabled{% endif%}" pk="{{ mu.pk }}">
+                            <input type="radio" name="options" id="option2"><span id="{{ mu.pk }}dvote" class="glyphicon glyphicon-thumbs-down"></span>
+                          </label>
+                        </div>
+                    </td>
+                    <td>
+                        <button type="button" class="fav btn btn-danger{% if not user %} disabled{% endif%}" pk="{{ mu.pk }}">
+                            <span id="{{ mu.pk }}heart" class="glyphicon glyphicon-heart{% if mu.entree not in favorites or not user %}-empty{% endif %}"></span>
+                        </button>
+                    </td>
+                </tr>
+                {% empty %}
+                    <tr>
+                        <td><em>Closed</em></td>
+                    </tr>
+                {% endfor %}
+            </table>
+          </div>
+          <div class="tab-pane fade" id="lunch">
+            <table class="table table-striped menutable">
+                {% for mu in lu_menuitems %}
+                <tr>
+                    <td id="{{ mu.pk }}votes">{{ mu.entree.votes }}</td>
+                    <td>{{ mu.entree.name }}</td>
+                    <td>
+                        <div class="btn-group" data-toggle="buttons">
+                          <label class="upvote btn btn-success{% if mu.entree in upvotes %} active{% endif %}{% if not user %} disabled{% endif%}" pk="{{ mu.pk }}">
+                            <input type="radio" name="options" id="option1"><span id="{{ mu.pk }}uvote"  class="glyphicon glyphicon-thumbs-up"></span>
+                          </label>
+                          <label class="downvote btn btn-danger{% if mu.entree in downvotes %} active{% endif %}{% if not user %} disabled{% endif%}" pk="{{ mu.pk }}">
+                            <input type="radio" name="options" id="option2"><span id="{{ mu.pk }}dvote" class="glyphicon glyphicon-thumbs-down"></span>
+                          </label>
+                        </div>
+                    </td>
+                    <td>
+                        <button type="button" class="fav btn btn-danger{% if not user %} disabled{% endif%}" pk="{{ mu.pk }}">
+                            <span id="{{ mu.pk }}heart" class="glyphicon glyphicon-heart{% if mu.entree not in favorites or not user %}-empty{% endif %}"></span>
+                        </button>
+                    </td>
+                </tr>
+                {% empty %}
+                    <tr>
+                        <td><em>Closed</em></td>
+                    </tr>
+                {% endfor %}
+            </table>
+          </div>
+          <div class="tab-pane fade" id="dinner">
+            <table class="table table-striped menutable">
+                {% for mu in di_menuitems %}
+                <tr>
+                    <td id="{{ mu.pk }}votes">{{ mu.entree.votes }}</td>
+                    <td>{{ mu.entree.name }}</td>
+                    <td>
+                        <div class="btn-group" data-toggle="buttons">
+                          <label class="upvote btn btn-success{% if mu.entree in upvotes %} active{% endif %}{% if not user %} disabled{% endif%}" pk="{{ mu.pk }}">
+                            <input type="radio" name="options" id="option1"><span id="{{ mu.pk }}uvote"  class="glyphicon glyphicon-thumbs-up"></span>
+                          </label>
+                          <label class="downvote btn btn-danger{% if mu.entree in downvotes %} active{% endif %}{% if not user %} disabled{% endif%}" pk="{{ mu.pk }}">
+                            <input type="radio" name="options" id="option2"><span id="{{ mu.pk }}dvote" class="glyphicon glyphicon-thumbs-down"></span>
+                          </label>
+                        </div>
+                    </td>
+                    <td>
+                        <button type="button" class="fav btn btn-danger{% if not user %} disabled{% endif%}" pk="{{ mu.pk }}">
+                            <span id="{{ mu.pk }}heart" class="glyphicon glyphicon-heart{% if mu.entree not in favorites or not user %}-empty{% endif %}"></span>
+                        </button>
+                    </td>
+                </tr>
+                {% empty %}
+                    <tr>
+                        <td><em>Closed</em></td>
+                    </tr>
+                {% endfor %}
+            </table>
+          </div>        
+        </div>
+    </div>
+</div>
+{% endblock %}
+

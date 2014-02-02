@@ -1,0 +1,155 @@
+{% load staticfiles %}
+<!DOCTYPE HTML>
+<html lang="en">
+
+	<head>
+		<title>{% block title %}CalEATS{% endblock title %}</title>
+		<meta charset="utf-8">
+		<link href="{% static 'caleats/css/bootstrap.min.css' %}" rel="stylesheet">
+		<link href="{% static 'caleats/css/bootstrap.css' %}" rel="stylesheet">
+		<link href="{% static 'caleats/css/main.css' %}" rel="stylesheet">
+	</head>
+
+    <body id={% block bodyid %}"genericbg"{% endblock bodyid %}>
+		<div class="navbar-wrapper">
+			<div class="navbar navbar-default" role="navigation" style="opacity:0.90">
+	      		<div class="container">
+	        		<div class="navbar-header">
+	          			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	            			<span class="sr-only">Toggle navigation</span>
+	            			<span class="icon-bar"></span>
+	            			<span class="icon-bar"></span>
+	            			<span class="icon-bar"></span>
+	          			</button>
+	          			<a class="navbar-brand" href="{% url 'caleats.views.index' %}"><img src="{% static 'caleats/img/home.png' %}" height="25"></a>
+	        		</div>
+	        		<div class="collapse navbar-collapse">
+	          			<ul class="nav navbar-nav">
+	            			<li><a href="{% url 'caleats.views.detail' hall='cafe_3' %}">Café 3</a></li>
+        					<li><a href="{% url 'caleats.views.detail' hall='clark_kerr' %}">Clark Kerr</a></li>
+            				<li><a href="{% url 'caleats.views.detail' hall='crossroads' %}">Crossroads</a></li>
+            				<li><a href="{% url 'caleats.views.detail' hall='foothill' %}">Foothill</a></li>
+	          			</ul>
+	          			<ul class="navbar-form navbar-right" role="form">
+	          				<div class="form-group">
+	              				<input type="text" placeholder="Search" class="form-control">
+	            			</div>
+	          			</ul>
+                  <ul class="nav navbar-nav navbar-right">
+                      {% if user.is_authenticated %}
+                        <li> <a href= "#" id="logoutLabel" onclick="logout()">Logout </a></li>
+                      {% else %}
+                        <li><a href="#" onclick=$('#loginModal').modal('show')>Login</a></li>
+                        <!--<li><a href="#" onclick=$('#registerModal').modal('show')>Register</a></li>-->
+                      {% endif %}
+                  </ul>
+	        		</div><!--/.nav-collapse -->
+	      		</div>
+	    	</div>
+    	</div>
+
+      <div class="modal" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="loginModalLabel">
+                  <ul class="nav nav-tabs" id = "loginTypeTab">
+                    <li class="active"><a href="#loginTab" data-toggle="tab">Login</a></li>
+                    <li><a href="#registerTab" data-toggle="tab">Register</a></li>
+                  </ul>
+                </h4>
+              </div>
+              <div class="modal-body tab-content">
+                <div class = "tab-pane active" id="loginTab">
+                  <form role="form">
+                    <div class="form-group">
+                      <label for="login_email">Email address</label>
+                      <input type="email" class="form-control" id="login_email" placeholder="Email">
+                    </div>
+                    <div class="form-group">
+                      <label for="login_password">Password</label>
+                      <input type="password" class="form-control" id="login_password" placeholder="Password">
+                    </div>
+                  </form>
+                </div>
+                <!-- #trash.py -->
+                <div class = "tab-pane" id = "registerTab">
+                  <form role="form">
+                  <div class="form-group">
+                    <label for="login_email">Email address</label>
+                    <input type="email" class="form-control" id="login_email2" placeholder="Email">
+                  </div>
+                  <div class="form-group">
+                    <label for="login_password">Password</label>
+                    <input type="password" class="form-control" id="login_password2" placeholder="Password">
+                  </div>
+                  <div class="form-group">
+                    <label for="confirm_password">Confirm Password</label>
+                    <input type="password" class="form-control" id="confirm_password2" placeholder="Re-type password">
+                  </div>
+                  </form>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick = "submit()">Submit</button>
+              </div>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+
+        <div id="middle">
+        {% block middle %}{% endblock middle %}
+        </div>
+
+        <script> 
+            function submit(){
+              if ($('ul#loginTypeTab li.active').text() == "Login") {login();}
+              else {register();}
+            }
+            function login(){
+              $.post(
+                "/caleats/login/",
+                {
+                  //'csrfmiddlewaretoken': $.cookie('csrftoken'),
+                  'login_email': $("#login_email").val(),
+                  'login_password': $("#login_password").val()
+                },
+                function(json){
+                  if (json['success']) {$("#loginModal").modal('hide'); alert("Logged in as " + $("#login_email").val()); document.location.reload(true);}
+                  else {alert("Incorrect email or password.");}
+                });
+            }
+            function logout(){
+              $.post("/caleats/logout/", {}, function(val){
+                if (val) {alert('Logged out.'); document.location.reload(true);}
+              });
+            }
+            function register(){
+              $.post(
+                "/caleats/register/",
+                {
+                  //'csrfmiddlewaretoken': $.cookie('csrftoken'),
+                  'login_email2': $("#login_email2").val(),
+                  'login_password2': $("#login_password2").val(),
+                  'confirm_password2': $("#confirm_password2").val()
+                },
+                function(json){
+                  if (!json['failure']) {$("#loginModal").modal('hide'); alert("Account created for " + $("#login_email2").val()); document.location.reload(true);}
+                  else {alert(json['failure']);}
+                }
+              )
+            }
+        </script>
+
+		<!-- Bootstrap core JavaScript
+	    ================================================== -->
+	    <!-- Placed at the end of the document so the pages load faster -->
+	    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	    <script src="https://code.jquery.com/jquery.js"></script>
+	    <script src="{% static 'caleats/js/jquery.cookie.js' %}"></script>
+		<script type="text/javascript" src="{% static 'caleats/js/bootstrap.min.js' %}"></script>
+	    
+	</body>
+</html>

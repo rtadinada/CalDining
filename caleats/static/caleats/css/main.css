@@ -1,0 +1,80 @@
+.fade:hover {
+    opacity: 1;
+    -webkit-filter: grayscale(0%);
+    z-index: -9999999999999999999999999px;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+}
+
+.fade {
+    opacity: 1;
+    -webkit-filter: grayscale(100%);
+    transition: opacity .3s ease-in-out;
+    -moz-transition: opacity .3s ease-in-out;
+    -webkit-transition: opacity .3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+}
+
+.picturetile {
+    width:auto;
+    height:500px;
+    margin-bottom:20px;
+}
+
+.name {
+    text-align: center;
+    color: #fff;
+    font: bold 24px/45px arial;
+}
+
+#hallheader {
+    background-color: rgb(220,220,220);
+    background: white url("../img/cal.jpg") center no-repeat;
+}
+
+body#indexbg {
+    background: white url("../img/cal.jpg") center no-repeat;
+}
+
+body#genericbg {
+    background: rgb(245,245,245); 
+}
+
+#mealdisplay {
+    width: 70%;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+#MealChoice > li > a {
+    color: rgb(66, 139, 202);
+}
+
+.gh {
+    color: gray;
+    font-weight:bold;
+}
+
+.rh {
+    color: red;
+    font-weight:bold;
+}
+
+#loginTypeTab > li > a {
+    color: black;
+}
+
+.vselected {
+    font-weight: bold;
+}
+
+.upvote.vselected {
+    color: green;
+}
+
+.downvote.vselected {
+    color: red;
+}
